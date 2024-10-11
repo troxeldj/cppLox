@@ -22,7 +22,7 @@ private:
   bool match(char expected);
   char peek();
   void addToken(TokenType type);
-  void addToken(TokenType type, std::string& value);
+  void addToken(TokenType type, std::any value);
   Token scanToken();
   bool isAtEnd();
   char advance();

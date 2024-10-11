@@ -1,9 +1,8 @@
-#include "Lox.hpp"
 #include <string>
 #include <fstream>
 #include <sstream>
+#include "Lox.hpp"
 #include "Scanner.hpp"
-
 bool Lox::hadError = false;
 
 std::string Lox::getLineText() {

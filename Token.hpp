@@ -1,16 +1,18 @@
 #ifndef __TOKEN_HPP__
 #define __TOKEN_HPP__
-#include "TokenType.hpp"
 #include <iostream>
+#include <any>
+#include "TokenType.hpp"
 
 class Token {
+public:
   TokenType type;
   std::string lexeme;
-  std::string literal;
+  std::any literal;
   int line;
 
-public:
-  Token(TokenType, const std::string&, const std::string&, int);
+  Token(TokenType, std::string&, std::any, int);
+  Token(TokenType, const std::string&, std::any, int);
   Token(const Token&);
   std::string toString();
 };

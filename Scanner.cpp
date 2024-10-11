@@ -68,7 +68,7 @@ std::vector<Token>& Scanner::scanTokens() {
     start = current;
     scanToken();
   }
-  tokens.push_back(Token(TokenType::__EOF, "", "", line));
+  tokens.push_back(Token(TokenType::__EOF, "", std::any(""), line));
   return tokens;
 }
 
@@ -134,7 +134,7 @@ void Scanner::addToken(TokenType type) {
   addToken(type, value);
 }
 
-void Scanner::addToken(TokenType type, std::string& value) {
+void Scanner::addToken(TokenType type, std::any value) {
   tokens.emplace_back(type, source.substr(start, current - start), value, line);
 }
 

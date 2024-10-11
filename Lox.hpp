@@ -4,14 +4,14 @@
 
 class Lox {
   static bool hadError;
-  static void report(int line, const std::string& where, const std::string& message);
+  static void report(int, const std::string&, const std::string&);
 public:
-    static void error(int line, const std::string& message);
+    static void error(int, const std::string&);
     static std::string getLineText();
-    static void runFile(std::string& path);
+    static void runFile(std::string&);
     static void runPrompt();
-    static void run(std::string& line);
-    static std::string fileToString(std::string& path);
+    static void run(std::string&);
+    static std::string fileToString(std::string&);
 };
 
 #endif
