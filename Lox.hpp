@@ -1,12 +1,14 @@
 #ifndef __LOX_HPP__
 #define __LOX_HPP__
 #include <iostream>
+#include "Token.hpp"
 
 class Lox {
   static bool hadError;
   static void report(int, const std::string&, const std::string&);
 public:
     static void error(int, const std::string&);
+    static void error(Token&, const std::string&);
     static std::string getLineText();
     static void runFile(std::string&);
     static void runPrompt();
