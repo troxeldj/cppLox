@@ -4,8 +4,13 @@
 #include <sstream>
 #include "Scanner.hpp"
 #include "Parser.hpp"
-#include "AstPrinter.hpp"
+#include "RuntimeError.hpp"
+#include "Interpreter.hpp"
+
 bool Lox::hadError = false;
+bool Lox::hadRuntimeError = false;
+
+Interpreter interpreter = Interpreter();
 
 std::string fileContentsToString(std::string path) {
   std::ifstream t(path);
@@ -18,18 +23,18 @@ void Lox::runFile(std::string path) {
   std::string fileContents = fileContentsToString(path);
   Lox::run(fileContents);
   if(hadError) std::exit(65);
+  if(hadRuntimeError) std::exit(70);
 }
 
 void Lox::run(std::string source) {
   Scanner scanner = Scanner(source);
   std::vector<Token> tokens = scanner.scanTokens();
   Parser parser{tokens};
-  std::shared_ptr<Expr> expression = parser.parse();
+  std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
   if(hadError) return;
 
-  std::cout << ASTPrinter{}.print(expression) << "\n";
-
+  interpreter.interpret(statements); 
 }
 
 void Lox::runPrompt() {
@@ -41,6 +46,7 @@ void Lox::runPrompt() {
       break;
     Lox::run(line);
     Lox::hadError = false;
+    Lox::hadRuntimeError = false;
   }
   exit(0);
 }
@@ -59,6 +65,11 @@ void Lox::error(const Token& token, std::string message) {
 void Lox::report(int line, std::string where, std::string message) {
   std::cerr << "[line " << line << "] Error " << where << ": " << message << "\n";
   Lox::hadError = true;
+}
+
+void Lox::runtimeError(const RuntimeError& error) {
+  std::cerr << error.what() << "\n[line " << error.token.line << "]\n";
+  Lox::hadRuntimeError = true;
 }
 
 int main(int argc, char* argv[]) {
