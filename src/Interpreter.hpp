@@ -73,6 +73,23 @@ public:
     return {};
   }
 
+  std::any visitIfStmt(std::shared_ptr<If> stmt) override {
+    if(isTruthy(evaluate(stmt->condition))) {
+      execute(stmt->thenBranch);
+    } else if(stmt->elseBranch != nullptr) {
+      execute(stmt->elseBranch);
+    }
+    return {};
+  }
+
+  std::any visitWhileStmt(std::shared_ptr<While> stmt) override {
+    while(isTruthy(evaluate(stmt->condition))) {
+      execute(stmt->body);
+    }
+    return {};
+  }
+
+
   std::any visitAssignExpr(std::shared_ptr<Assign> expr) override {
     std::any value = evaluate(expr->value);
     environment->assign(expr->name, value);
@@ -144,19 +161,31 @@ public:
     return environment->get(expr->name);
   }
 
+  std::any visitLogicalExpr(std::shared_ptr<Logical> expr) override {
+    std::any left = evaluate(expr->left);
+
+    if(expr->op.type == TokenType::OR) {
+      if(isTruthy(left)) return left;
+      else {
+        if(!isTruthy(left)) return left;
+      }
+      return evaluate(expr->right);
+    }
+  }
+
 private:
   void checkNumberOperand(const Token& op, std::any& operand) {
     if(operand.type() == typeid(double)) return;
     throw RuntimeError{op, "Operand must be a number"};
   }
 
-  void checkNumberOperands(const Token& op, std::any& left, std::any& right) {
+  void checkNumberOperands(const Token& op, const std::any& left, const std::any& right) {
     if(left.type() == typeid(double) && right.type() == typeid(double)) return;
 
     throw RuntimeError{op, "operands must be numbers."};
   }
 
-  bool isTruthy(std::any& object) {
+  bool isTruthy(const std::any& object) {
     if(object.type() == typeid(nullptr)) return false;
     if(object.type() == typeid(bool)) return std::any_cast<bool>(object);
     return true;
