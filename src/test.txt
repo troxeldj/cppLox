@@ -1,0 +1,18 @@
+class Bagel {
+  init(kind) {
+    this.kind = kind;
+  }
+
+  printKind() {
+    print(this.kind);
+  }
+}
+
+class BlueBerryBagel < Bagel {
+  init() {
+    super.init("BlueBerry");
+  }  
+}
+
+var bbBagel = BlueBerryBagel();
+bbBagel.printKind();
