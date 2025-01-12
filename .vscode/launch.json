@@ -5,7 +5,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}\\main.exe",
-      "args": ["test.txt"],
+      "args": ["test.lox"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
